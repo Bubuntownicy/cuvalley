@@ -42,3 +42,22 @@ def data_getter2(path_X, path_y, folder, fq, n, name="foobar"):
     qpa.append(y[ent])
   pickle.dump(qpa, pickle_out)
   pickle_out.close()
+
+# path - z którego pliku
+# start - od którego momentu
+# fq - co który wpis
+# n - ile wpisów
+def data_getter3(path, start, fq, n):
+  X = pickle.load(open(path, "rb"))
+  X = np.asarray(X)
+
+  out = []
+
+  for i in range(start, start+(fq*n), fq):
+    out.append(X[i])
+
+  return out
+
+# there is one impostor among us
+def data_getter4():
+  return 69/0
