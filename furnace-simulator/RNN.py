@@ -14,7 +14,7 @@ y = np.asarray(y)
 
 
 def train_nn(time_steps=400, observations=1, test_percent=0.1, epochs=510, batch_size=512, save_name="furnace_model"):
-    pointbreak = X.size * test_percent - (X.size * test_percent % (time_steps * observations))
+    pointbreak = int(X.size * test_percent - (X.size * test_percent % (time_steps * observations)))
     X_train = X[pointbreak:]
     y_train = y[pointbreak:]
     X_test = X[:pointbreak]
@@ -37,3 +37,7 @@ def train_nn(time_steps=400, observations=1, test_percent=0.1, epochs=510, batch
     # fit the model
     model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, verbose=1, validation_data=(X_test, y_test),
               callbacks=[ckpt_callback])
+
+
+if __name__ == '__main__':
+    train_nn()
