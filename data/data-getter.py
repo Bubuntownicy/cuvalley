@@ -19,5 +19,3 @@ def data_getter(path, folder, fq, n, name="foobar"):
       qpa.append(ent)
     pickle.dump(qpa, pickle_out)
     pickle_out.close()
-
-data_getter("X_08052021.pickle", "./lodziarnia", 100, 1000)
