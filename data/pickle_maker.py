@@ -7,7 +7,7 @@ import pickle
 date = sys.argv[1]
 folder_name = sys.argv[2]
 
-x_file_name = '../data/' + folder_name + '/' + date + '_merged_mani.csv'
+x_file_name = './' + folder_name + '/' + date + '_merged_mani.csv'
 x = []
 
 with open(x_file_name, newline='') as x_csvfile:
@@ -20,7 +20,7 @@ x_name_pickle = 'X_' + date + '.pickle'
 pickle_out = open(x_name_pickle, "wb")
 pickle.dump(x, pickle_out)
 
-y_file_name = '../data/' + folder_name + '/'+ date + '_merged_straty.csv'
+y_file_name = './' + folder_name + '/'+ date + '_merged_straty.csv'
 y = []
 
 with open(y_file_name, newline='') as y_csvfile:
