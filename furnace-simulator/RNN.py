@@ -13,7 +13,7 @@ X = np.asarray(X)
 y = np.asarray(y)
 
 
-def train_nn(time_steps=400, observations=1, test_percent=0.1, epochs=510, batch_size=512):
+def train_nn(time_steps=400, observations=1, test_percent=0.1, epochs=510, batch_size=512, save_name="furnace_model"):
     pointbreak = X.size * test_percent - (X.size * test_percent % (time_steps * observations))
     X_train = X[pointbreak:]
     y_train = y[pointbreak:]
@@ -25,8 +25,7 @@ def train_nn(time_steps=400, observations=1, test_percent=0.1, epochs=510, batch
     X_test = X_test.reshape(-1, time_steps, observations)
     y_test = y_test.reshape(-1, time_steps, observations)
 
-    checkpoint_path = "furnace.ckpt"
-    ckpt_callback = ModelCheckpoint(filepath=checkpoint_path, verbose=1, save_freq='epoch', period=10)
+    ckpt_callback = ModelCheckpoint(filepath=save_name, verbose=1, save_freq='epoch', period=10)
 
     model = Sequential()
     model.add(LSTM(64, input_shape=(time_steps, observations)))
