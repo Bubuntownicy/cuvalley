@@ -63,10 +63,10 @@ def data_getter3(path, start, fq, n):
 
 # there is one impostor among us
 def data_getter4(frequency=10,batch_size=200):
-    paths_loss = [r"2021-04-19\19042021_merged_straty.csv", r"2021-05-08\08052021_merged_straty.csv",
-             r"2021-05-27\27052021_merged_straty.csv"]
-    paths_action = [r"2021-04-19\19042021_merged_mani.csv", r"2021-05-08\08052021_merged_mani.csv",
-             r"2021-05-27\27052021_merged_mani.csv"]
+    paths_loss = [r"../data/2021-04-19/19042021_merged_straty.csv", r"../data/2021-05-08/08052021_merged_straty.csv",
+             r"../data/2021-05-27/27052021_merged_straty.csv"]
+    paths_action = [r"../data/2021-04-19/19042021_merged_mani.csv", r"../data/2021-05-08/08052021_merged_mani.csv",
+             r"../data/2021-05-27/27052021_merged_mani.csv"]
     X = []
     Y = []
     for path_loss,path_action in zip(paths_loss,paths_action):
@@ -92,7 +92,8 @@ def data_getter4(frequency=10,batch_size=200):
                 temp_Y = []
                 temp_X = []
     # print(np.array(X).shape)
-    print(X)
+    # print(X)
+    return X, Y
 
 if __name__ == "__main__":
     data_getter4()
