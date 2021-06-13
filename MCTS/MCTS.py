@@ -7,6 +7,7 @@ from queue import PriorityQueue
 from tqdm.auto import tqdm
 from objective_function.multicriteria_objective_function import multicriteria_objective_function
 from furnace_simulator.predict import get_model
+from data.data_getter import data_getter4 as data_getter
 
 
 
@@ -87,8 +88,15 @@ def select(tree, path):
         return select(child, path)
 
 
-def simulation(path,l,neural_net,predicted_actions=400):
-    actions_encrypted = l[-100:]+path + [np.random.randint(0, 9) for _ in range(predicted_actions-len(path)-len(l[-100:]))]
+def simulation(path,neural_net,data,predicted_actions=200):
+    if len(predicted_data)<predicted_actions:
+
+
+    actions_encrypted = path + [np.random.randint(0, 9) for _ in range(predicted_actions-len(path)-len(l[-100:]))]
+    for i in range(predicted_data):
+        if i<len(path):
+            predicted_data.append(neural_net.predict([actions])[0][0])
+
     actions = [[move_to_value(action)] for action in actions_encrypted]
     predicted_energy_loss = neural_net.predict([actions])
     cost, mean = multicriteria_objective_function(predicted_energy_loss)
@@ -103,11 +111,11 @@ def backpropagation(node, payout, path):
         node = node.parent
 
 
-def MCTS():
+def MCTS(data,turns=200,t=1):
     neural_net = get_model(r"..\furnace_simulator\furnace_model")
-    l = []
-    loss = [2750]*400
-    for turn in tqdm(range(800)):
+    predicted_data = []
+    actions = []
+    for turn in tqdm(range(turns)):
         tree = Node(0)
         for i in range(9):
             temp_node = Node(i)
@@ -118,7 +126,6 @@ def MCTS():
         tree.visited = True
 
         count = 0
-        t = 1
         t_0 = time()
 
         while True:
@@ -132,7 +139,7 @@ def MCTS():
 
             # SIMULATION
             #     print("simulation")
-            payout = simulation(path,l,neural_net)
+            payout = simulation(path,neural_net,data)
 
             # BACKPROPAGATION
             #     print("backpropagation")
@@ -154,4 +161,5 @@ def MCTS():
 if __name__ == '__main__':
     # np.random.seed(0)
     # random.seed(0)
-    print(MCTS())
+    X, Y = data_getter()
+    print(MCTS(X[0]))
