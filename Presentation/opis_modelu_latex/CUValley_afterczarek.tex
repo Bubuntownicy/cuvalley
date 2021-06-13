@@ -1,0 +1,114 @@
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Problem Set/Assignment Template to be used by the
+%% Food and Resource Economics Department - IFAS
+%% University of Florida's graduates.
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Version 1.0 - November 2019
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Ariel Soto-Caro
+%%  - asotocaro@ufl.edu
+%%  - arielsotocaro@gmail.com
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{mathtools, nccmath}
+\usepackage{enumitem}
+\usepackage{amssymb}
+\usepackage[ruled,vlined,options]{algorithm2e}
+
+
+\newcommand*\Aeq{\ensuremath{\overset{\kern2pt *}{=}}}
+\newcommand*\Beq{\ensuremath{\overset{\kern2pt **}{=}}}
+%%\renewcommand*{\thesection}{\Roman{section}.}
+\renewcommand*{\thesubsection}{\arabic{subsection}.}
+\DeclarePairedDelimiter{\nint}\lfloor\rfloor
+\renewcommand\thesubsection{\Alph{subsection}}
+
+
+
+\setlength\parindent{0pt} %% Do not touch this
+\begin{document}
+%-------------------------------
+%	TITLE SECTION
+%-------------------------------
+
+\hrule \medskip % Upper rule
+\begin{minipage}{0.295\textwidth}
+\raggedright
+\footnotesize
+Cezary Troska \hfill\\
+Antoni Dąbrowski \hfill\\
+Zaspół: Bubuntownicy
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\centering
+\large
+Stabilizacja pracy pieca zawiesinowego\\
+\normalsize
+
+\end{minipage}
+\begin{minipage}{0.295\textwidth}
+\raggedleft
+\today\hfill\\
+\end{minipage}
+\medskip\hrule
+\bigskip
+
+%-------------------------------
+%	CONTENTS
+%-------------------------------
+
+
+\section{Streszczenie}
+Optymalizacja pracy pieca poprzez manipulowanie wspłczynnikami procesu wymaga od nas dokładnego zrozumienia jego zasady działania. Aby to osiągnąć odtworzyliśmy środowisko komina reakcyjnego za pomocą sztucznej inteligencji. Dobrze odtworzone środowisko pozwoliło nam na wykorzystanie potężnych narzędzi oferowanych przez teorię gier, dzięki czemu jesteśmy w stanie skutecznie sugerować sternikowi najskuteczniejsze posunięcia.
+
+\section{Piec z danych}
+W postawionym przed nami wyzawniu mamy możemy wyróżnić takie cechy charakterystyczne: sytuacja jest złożona i wieloczynnikowa, reakcja na nasze działania następuje z opóźnieniem oraz mamy dostęp do dużego zbioru danych. Sięgneliśmy po narzędzie przeznaczone do pracy w dokładnie takich warunkach - \textbf{komórki LSTM}.
+
+\subsection{O technologii}
+
+Komórki LSTM to elementy składowe sieci neuronowych pozwalające im na radzenie sobie z problemami wymagającymi rozumienia przeszłych akcji i planowania przyszłych posunięć. Technologia sieci neuronowych jest wzorowana na działaniu ludzkiego mózgu, więc komórki LSTM można przyrównać do syntetycznego hipokampu - umożliwia gromadzenie wspomnień i kumulowanie wiedzy z czasem. \\
+
+Komórki LSTM zyskują uznanie w wielu dziedzinach - od gry na giełdzie\footnote{https://ieeexplore.ieee.org/abstract/document/7364089} po zastosowania w górnictwie\footnote{https://medium.com/analytics-vidhya/using-a-lstm-neural-network-to-predict-a-mining-industry-process-parameter-d91df7ffb4e}.
+
+\subsection{Funckja celu}
+Aby dobrze poradzić sobie z zadanym problemem musieliśmy najpierw szczegółowo określić jaki efekt chcemy uzyskać. Konkretnie zależy nam na określeniu funkcji, która dla danych opisujących straty KSR zwróci nam wartość liczbową określającą, jak stabilnie działał piec.
+
+Zdecydowaliśmy się na funkcję:
+$$F(D)=\frac{1}{|D|}\sum_{d\in D}(d-\delta)^2$$
+Gdzie $D$ to zbiór pomiarów strat KSR, a $\delta$ to średnia wartość straty. Własności funkcji $F$:
+\begin{itemize}
+\item Jest tym mniejsza im bardziej wykres strat się wypłaszcza
+\item Znacząco kara duże odstępstwa od normy (znaczny wzrost/spadek strat)
+\item Jest niezależna od rozmiaru próbki. Można porównywać w prosty sposób efektywność pieca zarówno na podstawie dziesięciu minut jego pracy, jak i dziesięciu godzin.
+\end{itemize}
+
+Tak określony wzór daje nam dobrze zdefiniowany problem optymalizacyjny. Mianowicie im niższa wartość funkcji $F$ tym piec stabilniej pracuje.
+
+\subsection{Drzemiący potencjał}
+
+Ważne jest podkreślenie faktu, że wykorzystana przez nas technologia dostarczyła wyniki \textbf{nie będąc w stanie rozwinąć swojego pełnego potencjału}. Do rozwinięcia skrzydeł sieci neuronowe potrzebują dużo treningu (dużo więcej niż to, na co pozwala 40 godzin hackatonu) i mnóstwa danych. Z obiema tymi rzeczami sieci są w stanie dojść dużo dalej, co pokazuje, że jest to dobra inwestycja na przyszłość. Zbieranie dalszych informacji o działaniu pieca pozwoli ciągłe udoskonalanie rozwiązania i poprawę osiągów.\\
+
+<wykres skuteczności nn względem liczby danych>
+
+\subsection{Gracz w systemie}
+Gdy umiemy już przewidzieć jaką reakcję spowoduje dana akcja, możemy starać się odpowiedzieć na pytanie - jaki jest optymalny ciąg akcji na najbliższe kilka minut? A w szczególności na pytanie - jaką akcję powinno się podjąć w danym momencie? Zauważmy, że przeszukiwanie wszystkich możliwych akcji dla każdej sekundy z kolejnych paru minut, daje astronomicznej wielkości problem. Aby zmniejszyć przestrzeń poszukiwań i zarazm skupić się na rozwiązaniach sensowniejszych ograniczyliśmy możliwe ustawienia przepływu powietrza do dziewięciu opcji, natomiast dane zbierane co sekundę pogrupowaliśmy w sekcje 10-sekundowe. Chociaż liczba kombinacji możliwych akcji wciąż jest przerażająco wielka, to daje już pewne nadzieje na znalezienie ciągu sensownych decyzji. Aby tego dokonać zastosowaliśmy algorytm \textbf{Monte Carlo Tree Search} będący jednym z najbardziej zaawansowanych algorymów tej dziedziny informatyki. Jego własności:
+\begin{itemize}
+\item W przeszukiwaniu rozwiązań skupia się znacznie bardziej na tych dających lepsze rezultaty. Nie zapomina jednak całkiem o gorszych akcjach, ponieważ czasem ich drobna modyfikacja prowadzi do lepszych rezultatów, niż znalezione obecnie.
+\item Jest algorytmem ANY-TIME, to znaczy, że skończy się kiedy my powiemy mu, aby się skończył. Innymi słowy im dłużej będzie działał, tym lepsze rezultaty osiągnie.
+\item Daje możliwość zrównoleglenia, dzięki czamu stosując jego wersję zaimplementowaną na karcie graficznej uzyska się niesamowite przyspieszenie, a co za tym idzie poprawę efektywności.
+\item Algorytm tego typu pozostawia unikatową sposobność do bezpośredniego wykorzystania wiedzy doświadczonych pracowników w jego ulepszaniu. Dawane przez nich rady mogą być przetłumaczone na dodatkową heurystykę wspierającą główny program.
+\end{itemize}
+Osiągi tego algorytmu mówią same za siebie: MCTS był podstawą do stworzenia systemu AlphaGo, pierwszego programu, który pokonał mistrza świata w chińskiej grze w Go. Święcił też triumfy w rozgrywkach takich jak Pac-Man czy poker. Przywoływanie tutaj różnych gier nie jest przypadkowe, bowiem właśnie w takiej formie przedstawiliśmy algorytmowi to wyzwanie. Niech potraktuje to jako szansę na zostanie mistrzem świata w stabilizacji pieca zawiesinowego.
+
+\section{Zegar tyka na naszą korzyść}
+Nasze podejście wykorzystuje jedne z najbardziej zaawansowanych i zoptymalizowanych algorytmów w danych dzidzinach, zapewniających coraz lepsze efekty w miarę upływu czasu.
+
+\end{document}
