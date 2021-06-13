@@ -15,6 +15,11 @@ def predict_series(input_data, model="furnace_model"):
 
     return pred
 
+def get_model(model="furnace_model"):
+    model = load_model(model)
+
+    return model
+
 
 if __name__ == '__main__':
     print(predict_series(np.array([[[1]] * 10])))
